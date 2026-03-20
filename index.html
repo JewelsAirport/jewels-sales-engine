@@ -54,7 +54,7 @@
             <div>
                 <h1 class="text-2xl font-bold tracking-wide flex items-center">
                     <i class="fas fa-gem text-gold mr-3 animate-bounce shadow-gold"></i>
-                    <span>JEWELS B2B SALES ENGINE <span class="text-[10px] bg-blue-500 px-2 py-0.5 rounded ml-2 uppercase">v7.0 Pro</span></span>
+                    <span>JEWELS B2B SALES ENGINE <span class="text-[10px] bg-blue-500 px-2 py-0.5 rounded ml-2 uppercase">v9.0 Master</span></span>
                 </h1>
                 <p class="text-gray-300 text-sm mt-1"><i class="fas fa-search mr-1"></i>X-Ray Scanner • <i class="fas fa-envelope mr-1"></i>Email Verifier • <i class="fas fa-pen mr-1"></i>Dynamic Pitch Generator</p>
             </div>
@@ -98,13 +98,13 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-building mr-1 text-gold"></i>Target Company</label>
-                            <input type="text" id="companyInput" placeholder="e.g. NCR Corporation" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none transition" onkeyup="updateDashboard()" value="NCR Corporation">
+                            <input type="text" id="companyInput" placeholder="e.g. NCR Corporation" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none transition" onkeyup="updateDashboard()" value="">
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-globe mr-1 text-gold"></i>Company Domain</label>
                             <div class="flex">
                                 <span class="inline-flex items-center px-3 bg-gray-100 border-2 border-r-0 border-gray-200 rounded-l-lg text-gray-600"><i class="fas fa-at"></i></span>
-                                <input type="text" id="domainInput" placeholder="ncr.com" class="w-full border-2 border-gray-200 rounded-r-lg p-3 focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none transition" onkeyup="updateDashboard()" value="ncr.com">
+                                <input type="text" id="domainInput" placeholder="ncr.com" class="w-full border-2 border-gray-200 rounded-r-lg p-3 focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none transition" onkeyup="updateDashboard()" value="">
                             </div>
                         </div>
                     </div>
@@ -167,7 +167,7 @@
                             <i class="fas fa-copy mr-2"></i>Copy All
                         </button>
                     </div>
-                    <div id="emailList" class="space-y-3 max-h-[350px] overflow-y-auto pr-2">
+                    <div id="emailList" class="space-y-3 max-h-[450px] overflow-y-auto pr-2">
                         <div class="text-center py-8 text-gray-400">
                             <i class="fas fa-user-plus text-5xl mb-3 opacity-30"></i>
                             <p class="text-lg">Select a prospect from your Queue</p>
@@ -176,29 +176,43 @@
                 </div>
 
                 <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 border-l-4 border-l-accent">
-                    <div class="flex justify-between items-start mb-4">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 pb-4 border-b">
                         <div>
                             <h2 class="text-lg font-bold text-navy"><i class="fas fa-pen mr-2 text-accent"></i>1-Click Pitch Generator</h2>
                             <p class="text-sm text-gray-600">Instantly generate B2B email for this prospect</p>
                         </div>
-                        <div class="flex gap-2">
-                            <button onclick="spinSubject()" class="border-2 border-gold text-gold hover:bg-gold hover:text-navy rounded-lg p-2 text-sm font-bold transition flex items-center" title="Swap Subject Line">
-                                <i class="fas fa-sync-alt mr-1"></i>Spin Subject
-                            </button>
-                            <select id="pitchType" onchange="generatePitch()" class="border-2 border-gray-200 rounded-lg p-2 text-sm font-semibold focus:border-accent focus:outline-none">
-                                <option value="direct">Direct Gatekeeper Pitch</option>
-                                <option value="trojan">info@ Routing Pitch</option>
+                        
+                        <div class="mt-3 md:mt-0 flex items-center bg-gray-100 p-2 rounded-lg border border-gray-200">
+                            <label class="text-xs font-bold text-gray-600 mr-2 uppercase tracking-wider">Email App:</label>
+                            <select id="emailClientPref" onchange="saveState()" class="bg-white border border-gray-300 rounded text-sm font-semibold p-1 focus:outline-none focus:border-accent">
+                                <option value="mailto">Desktop App (Default)</option>
+                                <option value="gmail">Gmail (Web)</option>
+                                <option value="outlook">Outlook (Web)</option>
+                                <option value="yahoo">Yahoo (Web)</option>
                             </select>
                         </div>
                     </div>
-                    
-                    <div class="relative">
-                        <textarea id="pitchOutput" rows="14" class="w-full border-2 border-gray-200 rounded-lg p-4 text-sm font-sans text-gray-800 focus:border-accent focus:outline-none resize-y bg-gray-50 leading-relaxed" readonly placeholder="Select a prospect to generate pitch..."></textarea>
+
+                    <div class="flex gap-2 mb-4 justify-end">
+                        <button onclick="spinSubject()" class="border-2 border-gold text-gold hover:bg-gold hover:text-navy rounded-lg p-2 text-sm font-bold transition flex items-center" title="Swap Subject Line">
+                            <i class="fas fa-sync-alt mr-1"></i>Spin Subject
+                        </button>
+                        <select id="pitchType" onchange="generatePitch()" class="border-2 border-gray-200 rounded-lg p-2 text-sm font-semibold focus:border-accent focus:outline-none">
+                            <option value="direct">Direct Gatekeeper Pitch</option>
+                            <option value="trojan">info@ Routing Pitch</option>
+                        </select>
                     </div>
                     
-                    <div class="mt-4 flex gap-4">
-                        <button onclick="copyPitch()" id="copyPitchBtn" disabled class="flex-1 bg-accent hover:bg-purple-600 text-white font-bold py-3 rounded-lg btn-transition opacity-50 cursor-not-allowed shadow-md">
-                            <i class="fas fa-copy mr-2"></i>Copy Customized Pitch
+                    <div class="relative">
+                        <textarea id="pitchOutput" rows="15" class="w-full border-2 border-gray-200 rounded-lg p-4 text-sm font-sans text-gray-800 focus:border-accent focus:outline-none resize-y bg-gray-50 leading-relaxed" readonly placeholder="Select a prospect to generate pitch..."></textarea>
+                    </div>
+                    
+                    <div class="mt-4 flex flex-col md:flex-row gap-4">
+                        <button onclick="copyPitch()" id="copyPitchBtn" disabled class="flex-1 bg-accent hover:bg-purple-600 text-white font-bold py-3 rounded-lg btn-transition opacity-50 cursor-not-allowed shadow-md flex items-center justify-center">
+                            <i class="fas fa-copy mr-2"></i>Copy Pitch
+                        </button>
+                        <button onclick="sendEmailNow()" id="sendEmailBtn" disabled class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg btn-transition opacity-50 cursor-not-allowed shadow-md flex items-center justify-center">
+                            <i class="fas fa-paper-plane mr-2"></i>Send Email Now
                         </button>
                     </div>
                 </div>
@@ -234,10 +248,40 @@
         let activeTarget = { first: "", last: "", full: "" };
 
         window.onload = function() {
+            loadState();
             renderJobTitles();
             renderDecisionMakers();
             updateDashboard();
         };
+
+        // Auto-Save functionality
+        function saveState() {
+            const state = {
+                company: document.getElementById('companyInput').value,
+                domain: document.getElementById('domainInput').value,
+                queue: document.getElementById('bulkNames').value,
+                client: document.getElementById('emailClientPref').value,
+                target: activeTarget
+            };
+            localStorage.setItem('jewelsB2BState', JSON.stringify(state));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('jewelsB2BState');
+            if (saved) {
+                try {
+                    const state = JSON.parse(saved);
+                    document.getElementById('companyInput').value = state.company || 'NCR Corporation';
+                    document.getElementById('domainInput').value = state.domain || 'ncr.com';
+                    document.getElementById('bulkNames').value = state.queue || '';
+                    if(state.client) { document.getElementById('emailClientPref').value = state.client; }
+                    activeTarget = state.target || { first: "", last: "", full: "" };
+                } catch(e) {}
+            } else {
+                document.getElementById('companyInput').value = 'NCR Corporation';
+                document.getElementById('domainInput').value = 'ncr.com';
+            }
+        }
 
         function showToast(message, isSuccess = true) {
             const toast = document.createElement('div');
@@ -254,9 +298,10 @@
             document.getElementById('bulkNames').value = '';
             activeTarget = { first: "", last: "", full: "" };
             currentSubjectIndex = 0;
-            processBulkNames(); // clear queue visually
+            localStorage.removeItem('jewelsB2BState');
+            processBulkNames();
             updateDashboard();
-            showToast('♻️ Board Cleared');
+            showToast('♻️ Board & Memory Cleared');
         }
 
         function renderJobTitles() {
@@ -302,20 +347,20 @@
             }
         }
 
-        // NEW: Bulk Name Processing
         function processBulkNames() {
             const text = document.getElementById('bulkNames').value;
-            // Split by line, remove empty lines
+            const companyInput = document.getElementById('companyInput').value.trim();
             const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
             const container = document.getElementById('parsedNamesList');
             
+            saveState();
+
             if (lines.length === 0) {
                 container.innerHTML = `
                     <div class="text-center py-6 text-gray-400 border-2 border-dashed border-gray-200 rounded-lg">
                         <i class="fas fa-clipboard-list text-3xl mb-2 opacity-50"></i>
                         <p class="text-sm">Queue is empty</p>
                     </div>`;
-                // If queue is cleared, clear active target
                 if (activeTarget.full !== "") {
                     activeTarget = { first: "", last: "", full: "" };
                     updateDashboard();
@@ -324,19 +369,24 @@
             }
 
             container.innerHTML = lines.map((name, index) => {
-                // Escape quotes for the onclick handler
                 const safeName = name.replace(/'/g, "\\'");
                 const isSelected = activeTarget.full === name;
                 
                 return `
-                    <div onclick="selectProspect('${safeName}')" class="p-3 rounded-lg border cursor-pointer transition flex justify-between items-center ${isSelected ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-gray-50 border-gray-200 hover:border-blue-300 text-navy'}">
-                        <span class="font-bold text-sm">${name}</span>
-                        ${isSelected ? '<i class="fas fa-check-circle text-white"></i>' : '<i class="fas fa-chevron-right text-gray-400 text-xs"></i>'}
+                    <div class="p-3 rounded-lg border transition flex justify-between items-center ${isSelected ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-gray-50 border-gray-200 hover:border-blue-300 text-navy'}">
+                        <div class="flex-1 cursor-pointer font-bold text-sm" onclick="selectProspect('${safeName}')">
+                            ${name}
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <a href="https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(name + ' ' + companyInput)}" target="_blank" onclick="event.stopPropagation()" class="${isSelected ? 'text-white hover:text-gray-200' : 'text-blue-600 hover:text-blue-800'} transition" title="Check LinkedIn Profile">
+                                <i class="fab fa-linkedin text-lg"></i>
+                            </a>
+                            ${isSelected ? '<i class="fas fa-check-circle text-white"></i>' : '<i class="fas fa-chevron-right text-gray-400 text-xs"></i>'}
+                        </div>
                     </div>
                 `;
             }).join('');
             
-            // Auto-select first if none is currently selected
             if (activeTarget.full === "" && lines.length > 0) {
                 selectProspect(lines[0]);
             }
@@ -348,25 +398,17 @@
             activeTarget.first = parts[0] || '';
             activeTarget.last = parts.slice(1).join(' ') || '';
             
-            processBulkNames(); // Re-render queue to show active highlighting
+            processBulkNames();
             updateDashboard();
             showToast(`Target locked: ${fullName}`);
         }
 
-        // External Verify Function
         function verifyExternal(email, button) {
-            // 1. Copy the email to clipboard
             navigator.clipboard.writeText(email).then(() => {
-                // 2. Visual feedback on button
                 button.classList.add('copy-success');
                 button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied & Opening...';
-                
                 showToast(`✅ Copied ${email}. Opening Verifier...`);
-                
-                // 3. Open verifier in new tab
                 window.open('https://www.verifyemailaddress.org/', '_blank');
-                
-                // Reset button
                 setTimeout(() => {
                     button.innerHTML = '<i class="fas fa-external-link-alt mr-1"></i>Verify';
                     button.classList.remove('copy-success');
@@ -411,7 +453,7 @@
                     showToast('✅ Pitch copied to clipboard');
                     
                     setTimeout(() => {
-                        copyBtn.innerHTML = '<i class="fas fa-copy mr-2"></i>Copy Customized Pitch';
+                        copyBtn.innerHTML = '<i class="fas fa-copy mr-2"></i>Copy Pitch';
                         copyBtn.classList.replace('bg-green-500', 'bg-accent');
                         copyBtn.classList.replace('hover:bg-green-600', 'hover:bg-purple-600');
                     }, 2000);
@@ -419,30 +461,116 @@
             }
         }
 
+        // --- NEW UNIVERSAL EMAIL SENDER LOGIC ---
+
+        function buildEmailLink(toEmail, subject, body) {
+            const client = document.getElementById('emailClientPref').value;
+            const encodedTo = encodeURIComponent(toEmail);
+            const encodedSub = encodeURIComponent(subject);
+            const encodedBody = encodeURIComponent(body);
+            
+            // We force Luisa's account for Gmail specifically
+            const authUser = encodeURIComponent("luisa@jewels-airport-transfers.co.uk");
+
+            if (client === 'gmail') {
+                return `https://mail.google.com/mail/?authuser=${authUser}&view=cm&fs=1&to=${encodedTo}&su=${encodedSub}&body=${encodedBody}`;
+            } else if (client === 'outlook') {
+                return `https://outlook.live.com/owa/?path=/mail/action/compose&to=${encodedTo}&subject=${encodedSub}&body=${encodedBody}`;
+            } else if (client === 'yahoo') {
+                return `https://compose.mail.yahoo.com/?to=${encodedTo}&subj=${encodedSub}&body=${encodedBody}`;
+            } else {
+                // Desktop Default
+                return `mailto:${encodedTo}?subject=${encodedSub}&body=${encodedBody}`;
+            }
+        }
+
+        function triggerEmail(link) {
+            const client = document.getElementById('emailClientPref').value;
+            
+            if (client === 'mailto') {
+                // Bypass browser blocking for native desktop apps
+                const hiddenLink = document.createElement('a');
+                hiddenLink.href = link;
+                hiddenLink.target = '_top';
+                document.body.appendChild(hiddenLink);
+                hiddenLink.click();
+                document.body.removeChild(hiddenLink);
+            } else {
+                // Open a clean 800x600 pop-up window for webmails instead of full screen tab
+                const windowFeatures = "width=800,height=600,menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes";
+                window.open(link, 'EmailComposeWindow', windowFeatures);
+            }
+        }
+
+        function sendEmailNow() {
+            const pitchText = document.getElementById('pitchOutput').value;
+            const lines = pitchText.split('\n');
+            let subject = "Corporate Travel Inquiry";
+            let body = pitchText;
+
+            if (lines[0].startsWith("Subject: ")) {
+                subject = lines[0].replace("Subject: ", "").trim();
+                body = lines.slice(2).join('\n'); 
+            }
+
+            let toEmail = "";
+            const domain = document.getElementById('domainInput').value.trim().toLowerCase().replace('@', '');
+            if (activeTarget.first && activeTarget.last && domain) {
+                toEmail = `${activeTarget.first.toLowerCase()}.${activeTarget.last.toLowerCase()}@${domain}`;
+            }
+
+            const link = buildEmailLink(toEmail, subject, body);
+            triggerEmail(link);
+            showToast('🚀 Opening Email App...');
+        }
+
+        function sendSpecific(targetEmail) {
+            document.getElementById('pitchType').value = 'trojan';
+            generatePitch(); 
+
+            const pitchText = document.getElementById('pitchOutput').value;
+            const lines = pitchText.split('\n');
+            let subject = "Corporate Travel Inquiry";
+            let body = pitchText;
+
+            if (lines[0].startsWith("Subject: ")) {
+                subject = lines[0].replace("Subject: ", "").trim();
+                body = lines.slice(2).join('\n'); 
+            }
+
+            const link = buildEmailLink(targetEmail, subject, body);
+            triggerEmail(link);
+            showToast(`🚀 Opening Email to ${targetEmail}...`);
+        }
+
+        // ----------------------------------------
+
         function spinSubject() {
             currentSubjectIndex++;
             generatePitch();
             showToast('🔄 Subject Rotated', true);
         }
 
-function generatePitch() {
-    const companyRaw = document.getElementById('companyInput').value.trim();
-    const company = companyRaw || "[Company Name]";
-    const first = activeTarget.first || "[First Name]";
-    const pitchType = document.getElementById('pitchType').value;
-    const pitchArea = document.getElementById('pitchOutput');
-    const copyBtn = document.getElementById('copyPitchBtn');
-    const capFirst = first !== "[First Name]" ? first.charAt(0).toUpperCase() + first.slice(1) : first;
-    
-    // Get selected roles to customize email based on prospect's position
-    const selectedRoles = getAllSelectedTitles();
-    const prospectRole = selectedRoles.length > 0 ? selectedRoles[0] : "";
-    
-    // 5 different email variations with unique subjects and content
-    const emailVariations = [
-        {
-            subject: `Corporate travel solutions for ${company} | Jewels Airport Transfers`,
-            content: (role) => `Dear ${capFirst},
+        function generatePitch() {
+            const companyRaw = document.getElementById('companyInput').value.trim();
+            const company = companyRaw || "[Company Name]";
+            const first = activeTarget.first || "[First Name]";
+            const pitchType = document.getElementById('pitchType').value;
+            const pitchArea = document.getElementById('pitchOutput');
+            const copyBtn = document.getElementById('copyPitchBtn');
+            const sendBtn = document.getElementById('sendEmailBtn');
+            const capFirst = first !== "[First Name]" ? first.charAt(0).toUpperCase() + first.slice(1) : first;
+            
+            const selectedRoles = getAllSelectedTitles();
+            const prospectRole = selectedRoles.length > 0 ? selectedRoles[0] : "";
+            
+            const signOff = `Best regards,\nLuisa\nJewels Airport Transfers\n+44 (0)20 3322 7723\nluisa@jewels-airport-transfers.co.uk`;
+            
+            // NOTE: Replaced bullet points (•) with standard dashes (-) to prevent encoding errors
+            const emailVariations = [
+                {
+                    subject: `Corporate travel solutions for ${company} | Jewels Airport Transfers`,
+                    content: (role) => `Dear ${capFirst},
 
 I hope this message finds you well.
 
@@ -450,10 +578,10 @@ I'm reaching out on behalf of Jewels Airport Transfers, and I wanted to explore 
 
 Here's a brief overview of our service:
 
-• Nationwide coverage, ensuring seamless travel for your team
-• Executive and standard vehicle options to suit different needs
-• Professional, fully licensed drivers for a safe and comfortable experience
-• Transparent, fixed pricing for easy budgeting
+- Nationwide coverage, ensuring seamless travel for your team
+- Executive and standard vehicle options to suit different needs
+- Professional, fully licensed drivers for a safe and comfortable experience
+- Transparent, pre-booked pricing for easy budgeting
 
 We also offer a discount on your first booking with the code TRIALRIDE10, giving £10 off.
 
@@ -461,14 +589,11 @@ If this is something that could benefit your team, I'd be happy to connect or po
 
 Thank you for your time, and I look forward to hearing from you.
 
-Best regards,
-Jewels Airport Transfers
-+44 (0)20 3322 7723
-hello@jewels-airport-transfers.co.uk`
-        },
-        {
-            subject: `Streamlining ${company}'s business travel logistics`,
-            content: (role) => `Dear ${capFirst},
+${signOff}`
+                },
+                {
+                    subject: `Streamlining ${company}'s business travel logistics`,
+                    content: (role) => `Dear ${capFirst},
 
 I trust you're having a productive week.
 
@@ -476,10 +601,10 @@ I'm reaching out on behalf of Jewels Airport Transfers. We've been working with 
 
 Our clients often share that managing team travel can be time-consuming. We help by offering:
 
-• Pre-booking systems that integrate with corporate schedules
-• Consolidated billing options for finance teams
-• Dedicated account management for seamless coordination
-• A fleet ranging from executive sedans to group transport
+- Pre-booking systems that integrate with corporate schedules
+- Consolidated billing options for finance teams
+- Dedicated account management for seamless coordination
+- A fleet ranging from executive sedans to group transport
 
 Many of our corporate partners appreciate having a dedicated transport partner they can rely on, especially during peak travel seasons or when coordinating multiple team members.
 
@@ -487,14 +612,11 @@ I'd be happy to share more details if travel coordination falls within your resp
 
 Thank you for considering this.
 
-Kind regards,
-Jewels Airport Transfers
-+44 (0)20 3322 7723
-hello@jewels-airport-transfers.co.uk`
-        },
-        {
-            subject: `Partnering with ${company} for executive transport needs`,
-            content: (role) => `Dear ${capFirst},
+${signOff}`
+                },
+                {
+                    subject: `Partnering with ${company} for executive transport needs`,
+                    content: (role) => `Dear ${capFirst},
 
 I hope you're well.
 
@@ -502,10 +624,10 @@ I'm reaching out on behalf of Jewels Airport Transfers. We provide executive tra
 
 Our service is designed with corporate clients in mind:
 
-• Executive vehicles with professional chauffeurs
-• Meet-and-greet services at airports and seaports
-• Flexible booking with no long-term commitments
-• Real-time tracking and updates for peace of mind
+- Executive vehicles with professional chauffeurs
+- Meet-and-greet services at airports and seaports
+- Flexible pre-booking with no long-term commitments
+- Real-time tracking and updates for peace of mind
 
 We've found that organizations appreciate having a reliable transport partner they can call on for board meetings, client visits, and team travel.
 
@@ -515,14 +637,11 @@ Alternatively, if there's someone else who handles travel or facilities manageme
 
 Thank you for your time and consideration.
 
-Warm regards,
-Jewels Airport Transfers
-+44 (0)20 3322 7723
-hello@jewels-airport-transfers.co.uk`
-        },
-        {
-            subject: `Enhancing ${company}'s travel experience with pre-booked transfers`,
-            content: (role) => `Dear ${capFirst},
+${signOff}`
+                },
+                {
+                    subject: `Enhancing ${company}'s travel experience with pre-booked transfers`,
+                    content: (role) => `Dear ${capFirst},
 
 I hope this email finds you well.
 
@@ -530,10 +649,10 @@ I'm reaching out on behalf of Jewels Airport Transfers to share how we support U
 
 What sets us apart:
 
-• DBS-checked, experienced drivers
-• Door-to-door service with flight monitoring
-• Simple online booking system
-• Corporate accounts with flexible payment terms
+- DBS-checked, experienced drivers
+- Door-to-door service with flight monitoring
+- Simple online pre-booking system
+- Corporate accounts with flexible payment terms
 
 We understand that when teams are traveling for business, the details matter. Punctuality, comfort, and ease of booking can make a significant difference to the overall experience.
 
@@ -541,14 +660,11 @@ I'd be happy to arrange a brief conversation to see if there's a fit for ${compa
 
 Thank you for your time.
 
-Best regards,
-Jewels Airport Transfers
-+44 (0)20 3322 7723
-hello@jewels-airport-transfers.co.uk`
-        },
-        {
-            subject: `${company} | Corporate travel partner inquiry`,
-            content: (role) => `Dear ${capFirst},
+${signOff}`
+                },
+                {
+                    subject: `${company} | Corporate travel partner inquiry`,
+                    content: (role) => `Dear ${capFirst},
 
 I hope you're having a good week.
 
@@ -556,10 +672,10 @@ I'm reaching out on behalf of Jewels Airport Transfers. We're a UK-based executi
 
 Our approach is simple:
 
-• We provide consistent, high-quality transport
-• We work around your team's schedule
-• We offer straightforward pricing with no surprises
-• We handle everything from individual trips to group transfers
+- We provide consistent, high-quality pre-booked transport
+- We work around your team's schedule
+- We offer straightforward pricing with no surprises
+- We handle everything from individual trips to group transfers
 
 I'm reaching out to understand if travel logistics is something your team manages internally. Many of our clients appreciate having a dedicated transport partner who understands the demands of corporate travel.
 
@@ -567,46 +683,43 @@ If this aligns with your role or if you could direct me to the appropriate perso
 
 Thank you for your time and consideration.
 
-Kind regards,
-Jewels Airport Transfers
-+44 (0)20 3322 7723
-hello@jewels-airport-transfers.co.uk`
+${signOff}`
+                }
+            ];
+            
+            const variationIndex = currentSubjectIndex % emailVariations.length;
+            const selectedVariation = emailVariations[variationIndex];
+            
+            let pitchText = "";
+            if (pitchType === "direct") {
+                pitchText = `Subject: ${selectedVariation.subject}\n\n${selectedVariation.content(prospectRole)}`;
+            } else {
+                const trojanSubjects = [
+                    `For the attention of ${company}'s Office Manager / Facilities Team`,
+                    `Supplier registration inquiry for ${company}`,
+                    `Vendor introduction: Ground transport services`,
+                    `For the ${company} travel coordination team`,
+                    `Corporate transport services - ${company}`
+                ];
+                const selectedTrojanSubject = trojanSubjects[currentSubjectIndex % trojanSubjects.length];
+                
+                pitchText = `Subject: ${selectedTrojanSubject}\n\nGood morning,\n\nCould you please forward this to your Office Manager, Facilities Manager, or the person who handles corporate travel and ground transport logistics for the ${company} UK team?\n\nI'm reaching out on behalf of Jewels Airport Transfers, a local, pre-booked executive transport fleet, and would like to introduce our corporate services. I wanted to ensure we're routing this to the correct desk before sending over further details.\n\nThank you for your help.\n\n${signOff}`;
+            }
+
+            pitchArea.value = pitchText;
+
+            if (company !== "[Company Name]" && activeTarget.first !== "") {
+                copyBtn.disabled = false;
+                copyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                sendBtn.disabled = false;
+                sendBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                copyBtn.disabled = true;
+                copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                sendBtn.disabled = true;
+                sendBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
         }
-    ];
-    
-    // Rotate through variations based on subject spin index
-    const variationIndex = currentSubjectIndex % emailVariations.length;
-    const selectedVariation = emailVariations[variationIndex];
-    
-    // Subjects for the dropdown/spin button
-    const subjects = emailVariations.map(v => v.subject);
-    
-    let pitchText = "";
-    if (pitchType === "direct") {
-        pitchText = `Subject: ${selectedVariation.subject}\n\n${selectedVariation.content(prospectRole)}`;
-    } else {
-        const trojanSubjects = [
-            `For the attention of ${company}'s Office Manager / Facilities Team`,
-            `Supplier registration inquiry for ${company}`,
-            `Vendor introduction: Ground transport services`,
-            `For the ${company} travel coordination team`,
-            `Corporate transport services - ${company}`
-        ];
-        const selectedTrojanSubject = trojanSubjects[currentSubjectIndex % trojanSubjects.length];
-        
-        pitchText = `Subject: ${selectedTrojanSubject}\n\nGood morning,\n\nCould you please forward this to your Office Manager, Facilities Manager, or the person who handles corporate travel and ground transport logistics for the ${company} UK team?\n\nI'm reaching out on behalf of Jewels Airport Transfers, a local, pre-booked executive transport fleet, and would like to introduce our corporate services. I wanted to ensure we're routing this to the correct desk before sending over further details.\n\nThank you for your help.\n\nKind regards,\nJewels Airport Transfers\n+44 (0)20 3322 7723\nhello@jewels-airport-transfers.co.uk`;
-    }
-
-    pitchArea.value = pitchText;
-
-    if (company !== "[Company Name]" && activeTarget.first !== "") {
-        copyBtn.disabled = false;
-        copyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-    } else {
-        copyBtn.disabled = true;
-        copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
-    }
-}
 
         function updateDashboard() {
             const company = document.getElementById('companyInput').value.trim();
@@ -619,6 +732,7 @@ hello@jewels-airport-transfers.co.uk`
             document.getElementById('statDomain').textContent = domain || 'Not set';
             document.getElementById('statName').textContent = activeTarget.full || 'No active target';
             
+            saveState();
             updateXRayQuery();
             generatePitch();
 
@@ -634,7 +748,7 @@ hello@jewels-airport-transfers.co.uk`
 
                 document.getElementById('statCount').textContent = permutations.length;
 
-                emailList.innerHTML = permutations.map(item => `
+                let listHTML = permutations.map(item => `
                     <div class="email-row flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200 hover:border-gold transition mb-2">
                         <div class="flex flex-col">
                             <span class="font-mono text-navy font-bold text-sm mb-1">${item.email}</span>
@@ -644,17 +758,40 @@ hello@jewels-airport-transfers.co.uk`
                             <button onclick="checkDomainMX('${item.email}', this)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded text-xs btn-transition border border-blue-600 shadow-sm" title="Instantly check if company server is active">
                                 <i class="fas fa-satellite-dish mr-1"></i>Domain
                             </button>
-                            
                             <button onclick="verifyExternal('${item.email}', this)" class="bg-gold hover:bg-gold-light text-navy font-bold py-1.5 px-3 rounded text-xs btn-transition border border-gold shadow-sm" title="Open external tool to verify exact inbox">
                                 <i class="fas fa-external-link-alt mr-1"></i>Verify
                             </button>
-                            
                             <button onclick="copyEmail('${item.email}', this)" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1.5 px-3 rounded text-xs btn-transition border border-gray-300 shadow-sm">
                                 <i class="fas fa-copy mr-1"></i>Copy
                             </button>
                         </div>
                     </div>
                 `).join('');
+
+                const trojans = ['info', 'office', 'admin', 'hello', 'reception', 'enquiries', 'support'];
+                const trojanHTML = `
+                <div class="mt-6 pt-4 border-t border-gray-200">
+                    <h3 class="text-xs font-bold text-gray-500 uppercase mb-3"><i class="fas fa-door-open mr-1"></i>Trojan Inboxes (Gatekeepers)</h3>
+                    ${trojans.map(prefix => {
+                        const temail = `${prefix}@${domain}`;
+                        return `
+                        <div class="email-row flex items-center justify-between bg-white p-2 rounded-lg border border-gray-100 hover:border-accent transition mb-2">
+                            <span class="font-mono text-navy font-bold text-sm">${temail}</span>
+                            <div class="flex space-x-2">
+                                <button onclick="sendSpecific('${temail}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded text-xs btn-transition border border-blue-600 shadow-sm">
+                                    <i class="fas fa-paper-plane mr-1"></i>Send
+                                </button>
+                                <button onclick="copyEmail('${temail}', this)" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1 px-3 rounded text-xs btn-transition border border-gray-300 shadow-sm">
+                                    <i class="fas fa-copy mr-1"></i>Copy
+                                </button>
+                            </div>
+                        </div>
+                        `;
+                    }).join('')}
+                </div>`;
+                
+                emailList.innerHTML = listHTML + trojanHTML;
+
             } else {
                 emailList.innerHTML = `
                     <div class="text-center py-10 text-gray-400">
@@ -665,9 +802,7 @@ hello@jewels-airport-transfers.co.uk`
             }
         }
 
-        // NEW: Google DNS Domain Verification (WITH AUTO-COPY)
         async function checkDomainMX(email, button) {
-            // Set loading state
             button.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Scanning...';
             button.disabled = true;
             button.classList.add('opacity-75', 'cursor-not-allowed');
@@ -675,19 +810,15 @@ hello@jewels-airport-transfers.co.uk`
             const domain = email.split('@')[1];
 
             try {
-                // Call Google's free Public DNS API to look for Mail Exchangers (Type=MX)
                 const response = await fetch(`https://dns.google/resolve?name=${domain}&type=MX`);
                 const data = await response.json();
 
-                // Remove the default styling
                 button.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'border-blue-600', 'opacity-75', 'cursor-not-allowed');
 
-                // Check if Google found any Mail records
                 if (data.Answer && data.Answer.length > 0) {
                     button.classList.add('bg-green-500', 'hover:bg-green-600', 'border-green-600');
                     button.innerHTML = '<i class="fas fa-check-circle mr-1"></i>Valid & Copied';
                     
-                    // Automatically copy the email to the clipboard!
                     navigator.clipboard.writeText(email).then(() => {
                         showToast(`✅ ${domain} is live! Email copied to clipboard.`);
                     });
@@ -704,7 +835,6 @@ hello@jewels-airport-transfers.co.uk`
                 showToast("⚠️ Could not reach DNS server.", false);
             }
 
-            // Reset the button after 4 seconds
             setTimeout(() => {
                 button.disabled = false;
                 button.className = "bg-blue-600 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded text-xs btn-transition border border-blue-600 shadow-sm";
