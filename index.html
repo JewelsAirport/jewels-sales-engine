@@ -256,7 +256,7 @@
             currentSubjectIndex = 0;
             processBulkNames(); // clear queue visually
             updateDashboard();
-            showToast('?? Board Cleared');
+            showToast('♻️ Board Cleared');
         }
 
         function renderJobTitles() {
@@ -361,7 +361,7 @@
                 button.classList.add('copy-success');
                 button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied & Opening...';
                 
-                showToast(`? Copied ${email}. Opening Verifier...`);
+                showToast(`✅ Copied ${email}. Opening Verifier...`);
                 
                 // 3. Open verifier in new tab
                 window.open('https://www.verifyemailaddress.org/', '_blank');
@@ -378,7 +378,7 @@
             navigator.clipboard.writeText(email).then(() => {
                 button.classList.add('copy-success');
                 button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
-                showToast(`? Copied: ${email}`);
+                showToast(`✅ Copied: ${email}`);
                 setTimeout(() => {
                     button.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy';
                     button.classList.remove('copy-success');
@@ -392,67 +392,67 @@
             
             if (emails.length > 0) {
                 navigator.clipboard.writeText(emails.join('\n')).then(() => {
-                    showToast(`? Copied all ${emails.length} emails to clipboard!`);
+                    showToast(`✅ Copied all ${emails.length} emails to clipboard!`);
                 });
             } else {
-                showToast(`?? No emails generated yet`, false);
+                showToast(`⚠️ No emails generated yet`, false);
             }
         }
 
         function spinSubject() {
             currentSubjectIndex++;
             generatePitch();
-            showToast('?? Subject Rotated', true);
+            showToast('🔄 Subject Rotated', true);
         }
 
         function generatePitch() {
-            const companyRaw = document.getElementById('companyInput').value.trim();
-            const company = companyRaw || "[Company Name]";
-            const first = activeTarget.first || "[First Name]";
-            const pitchType = document.getElementById('pitchType').value;
-            const pitchArea = document.getElementById('pitchOutput');
-            const copyBtn = document.getElementById('copyPitchBtn');
-            const capFirst = first !== "[First Name]" ? first.charAt(0).toUpperCase() + first.slice(1) : first;
-            
-            const directSubjects = [
-                `Heathrow transfers for the ${company} team`,
-                `${company} corporate transport / Jewels Transfers`,
-                `Dedicated transport account for ${company}`,
-                `Corporate rates: ${company} x Jewels Transfers`,
-                `Executive travel logistics for ${company}`
-            ];
+    const companyRaw = document.getElementById('companyInput').value.trim();
+    const company = companyRaw || "[Company Name]";
+    const first = activeTarget.first || "[First Name]";
+    const pitchType = document.getElementById('pitchType').value;
+    const pitchArea = document.getElementById('pitchOutput');
+    const copyBtn = document.getElementById('copyPitchBtn');
+    const capFirst = first !== "[First Name]" ? first.charAt(0).toUpperCase() + first.slice(1) : first;
+    
+    const directSubjects = [
+        `Heathrow transfers for the ${company} team`,
+        `${company} corporate transport / Jewels Transfers`,
+        `Dedicated transport account for ${company}`,
+        `Corporate rates: ${company} x Jewels Transfers`,
+        `Executive travel logistics for ${company}`
+    ];
 
-            const trojanSubjects = [
-                `Route to ${company} Office Manager / Facilities`,
-                `Supplier info for the ${company} Office Manager`,
-                `Vendor setup: Ground transport logistics`,
-                `Query for the ${company} travel coordinator`
-            ];
+    const trojanSubjects = [
+        `Route to ${company} Office Manager / Facilities`,
+        `Supplier info for the ${company} Office Manager`,
+        `Vendor setup: Ground transport logistics`,
+        `Query for the ${company} travel coordinator`
+    ];
 
-            const selectedDirectSubject = directSubjects[currentSubjectIndex % directSubjects.length];
-            const selectedTrojanSubject = trojanSubjects[currentSubjectIndex % trojanSubjects.length];
+    const selectedDirectSubject = directSubjects[currentSubjectIndex % directSubjects.length];
+    const selectedTrojanSubject = trojanSubjects[currentSubjectIndex % trojanSubjects.length];
 
-            let pitchText = "";
-            if (pitchType === "direct") {
-                pitchText = `Subject: ${selectedDirectSubject}\n\nDear ${capFirst},\n\nI hope you're doing well.\n\nI'm Luisa from Jewels Airport Transfers. I noticed your team is based at ${company}, and having worked with a number of corporate companies, I know how heavily teams rely on Heathrow for business travel.\n\nThat's exactly why I wanted to reach out. We help corporate teams take the guesswork out of airport transport — pre-booked, prepaid, reliable, and consistent, so there are no last-minute scrambles or delays when it matters most, particularly during peak travel periods.\n\nHere's what we offer:\n\n• A flexible range of vehicles — from standard saloons through to executive and group travel options\n• Professional, DBS-checked drivers\n• Consistent availability with straightforward, flexible invoicing\n\nIf you'd like to give us a try, use code TRIALRIDE10 for £10 off your first booking — a simple way to see how we work with no commitment.\n\nWould this be a good fit for the ${company} team's travel needs? If you're not the right person to speak with, I'd really appreciate a nudge in the right direction.\n\nThank you for your time, ${capFirst} — I hope to hear from you soon.\n\nKind regards,\nLuisa Cioni\nStrategic Growth Manager\nJewels Airport Transfers\n+44 (0)20 3322 7723\nluisa@jewels-airport-transfers.co.uk`;
-            } else {
-                pitchText = `Subject: ${selectedTrojanSubject}\n\nGood morning,\n\nCould you please forward this to your Office Manager or the person who handles corporate travel and ground transport logistics for the ${company} UK team?\n\nWe are a local, pre-booked executive transport fleet (Jewels Airport Transfers) looking to send over our corporate rate card. We want to ensure we are routing this to the correct desk before sending any attachments.\n\nThank you for your help.\n\nKind regards,\nLuisa Cioni\nStrategic Growth Manager\nJewels Airport Transfers\n+44 (0)20 3322 7723\nluisa@jewels-airport-transfers.co.uk`;
-            }
+    let pitchText = "";
+    if (pitchType === "direct") {
+        pitchText = `Subject: ${selectedDirectSubject}\n\nDear ${capFirst},\n\nI hope you're doing well.\n\nI'm Luisa from Jewels Airport Transfers. I noticed your team is based at ${company}, and having worked with a number of corporate companies, I know how heavily teams rely on Heathrow for business travel.\n\nThat's exactly why I wanted to reach out. We help corporate teams take the guesswork out of airport transport — pre-booked, prepaid, reliable, and consistent, so there are no last-minute scrambles or delays when it matters most, particularly during peak travel periods.\n\nHere's what we offer:\n\n• A flexible range of vehicles — from standard saloons through to executive and group travel options\n• Professional, DBS-checked drivers\n• Consistent availability with straightforward, flexible invoicing\n\nIf you'd like to give us a try, use code TRIALRIDE10 for £10 off your first booking — a simple way to see how we work with no commitment.\n\nWould this be a good fit for the ${company} team's travel needs? If you're not the right person to speak with, I'd really appreciate a nudge in the right direction.\n\nThank you for your time, ${capFirst} — I hope to hear from you soon.\n\nKind regards,\nLuisa Cioni\nStrategic Growth Manager\nJewels Airport Transfers\n+44 (0)20 3322 7723\nluisa@jewels-airport-transfers.co.uk`;
+    } else {
+        pitchText = `Subject: ${selectedTrojanSubject}\n\nGood morning,\n\nCould you please forward this to your Office Manager or the person who handles corporate travel and ground transport logistics for the ${company} UK team?\n\nWe are a local, pre-booked executive transport fleet (Jewels Airport Transfers) looking to send over our corporate rate card. We want to ensure we are routing this to the correct desk before sending any attachments.\n\nThank you for your help.\n\nKind regards,\nLuisa Cioni\nStrategic Growth Manager\nJewels Airport Transfers\n+44 (0)20 3322 7723\nluisa@jewels-airport-transfers.co.uk`;
+    }
 
-            pitchArea.value = pitchText;
+    pitchArea.value = pitchText;
 
-            if (company !== "[Company Name]" && activeTarget.first !== "") {
-                copyBtn.disabled = false;
-                copyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            } else {
-                copyBtn.disabled = true;
-                copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            }
-        }
+    if (company !== "[Company Name]" && activeTarget.first !== "") {
+        copyBtn.disabled = false;
+        copyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    } else {
+        copyBtn.disabled = true;
+        copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+}
 
         function copyPitch() {
             navigator.clipboard.writeText(document.getElementById('pitchOutput').value).then(() => {
-                showToast('? Pitch copied to clipboard!');
+                showToast('✅ Pitch copied to clipboard!');
             });
         }
 
