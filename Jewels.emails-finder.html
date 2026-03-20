@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jewels Email Finder & Sales Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#0A192F',
+                        gold: '#D4AF37',
+                        'navy-light': '#1a2f4a',
+                        'gold-light': '#e3c14e',
+                        accent: '#8B5CF6' 
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .btn-transition { transition: all 0.2s ease-in-out; }
+        .copy-success { background-color: #10b981 !important; color: white !important; border-color: #10b981 !important;}
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #0A192F;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen">
+
+    <header class="bg-navy text-white px-8 py-5 border-b-4 border-gold shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold tracking-wide flex items-center">
+    <i class="fas fa-gem text-gold mr-3 animate-bounce shadow-gold"></i>
+    <span>JEWELS B2B SALES ENGINE <span class="text-[10px] bg-blue-500 px-2 py-0.5 rounded ml-2 uppercase">v7.0 Pro</span></span>
+</h1>
+<p class="text-gray-300 text-sm mt-1"><i class="fas fa-search mr-1"></i>X-Ray Scanner • <i class="fas fa-envelope mr-1"></i>Email Verifier • <i class="fas fa-pen mr-1"></i>Dynamic Pitch Generator</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button onclick="clearAll()" class="text-sm text-gray-300 hover:text-white mr-4 transition"><i class="fas fa-eraser mr-1"></i>Clear Board</button>
+                <span class="bg-gold text-navy px-3 py-1 rounded-full text-sm font-bold shadow-[0_0_10px_rgba(212,175,55,0.5)]"><i class="fas fa-circle text-green-500 mr-1 text-xs"></i>LIVE</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto mt-8 px-6 pb-12">
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-4 rounded-lg shadow border-l-4 border-navy">
+                <p class="text-xs text-gray-500 uppercase font-bold tracking-wider"><i class="fas fa-building mr-1"></i>Target Company</p>
+                <p class="text-lg font-bold text-navy truncate" id="statCompany">Not set</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow border-l-4 border-gold">
+                <p class="text-xs text-gray-500 uppercase font-bold tracking-wider"><i class="fas fa-globe mr-1"></i>Domain</p>
+                <p class="text-lg font-bold text-navy truncate" id="statDomain">Not set</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow border-l-4 border-green-500">
+                <p class="text-xs text-gray-500 uppercase font-bold tracking-wider"><i class="fas fa-user mr-1"></i>Active Prospect</p>
+                <p class="text-lg font-bold text-navy truncate" id="statName">No name</p>
+            </div>
+            <div class="bg-white p-4 rounded-lg shadow border-l-4 border-accent">
+                <p class="text-xs text-gray-500 uppercase font-bold tracking-wider"><i class="fas fa-envelope mr-1"></i>Email Patterns</p>
+                <p class="text-lg font-bold text-navy" id="statCount">0</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+            
+            <div class="md:col-span-5 space-y-6">
+                
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h2 class="text-lg font-bold text-navy mb-4 flex items-center">
+                        <span class="bg-navy text-white w-6 h-6 rounded-full inline-flex items-center justify-center text-sm mr-2"><i class="fas fa-building text-xs"></i></span>
+                        Company Details
+                    </h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-building mr-1 text-gold"></i>Target Company</label>
+                            <input type="text" id="companyInput" placeholder="e.g. NCR Corporation" class="w-full border-2 border-gray-200 rounded-lg p-3 focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none transition" onkeyup="updateDashboard()" value="NCR Corporation">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-1"><i class="fas fa-globe mr-1 text-gold"></i>Company Domain</label>
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3 bg-gray-100 border-2 border-r-0 border-gray-200 rounded-l-lg text-gray-600"><i class="fas fa-at"></i></span>
+                                <input type="text" id="domainInput" placeholder="ncr.com" class="w-full border-2 border-gray-200 rounded-r-lg p-3 focus:border-gold focus:ring-2 focus:ring-gold/20 focus:outline-none transition" onkeyup="updateDashboard()" value="ncr.com">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                    <h2 class="text-lg font-bold text-navy mb-4 flex items-center">
+                        <span class="bg-navy text-white w-6 h-6 rounded-full inline-flex items-center justify-center text-sm mr-2"><i class="fas fa-bolt text-xs"></i></span>
+                        Select Target Roles
+                    </h2>
+                    
+                    <div class="mb-4">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-2 flex items-center"><i class="fas fa-shield-alt text-gold mr-2"></i>Gatekeeper Roles (UK)</h3>
+                        <div class="space-y-2" id="jobTitlesList"></div>
+                    </div>
+                    
+                    <div class="border-t pt-4">
+                        <h3 class="text-sm font-semibold text-gray-700 mb-2 flex items-center"><i class="fas fa-crown text-gold mr-2"></i>Decision Makers (UK)</h3>
+                        <div class="grid grid-cols-2 gap-2" id="decisionMakerList"></div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 border-l-4 border-l-blue-500">
+                    <h2 class="text-lg font-bold text-navy mb-2 flex items-center">
+                        <i class="fas fa-users text-blue-500 mr-2"></i>Prospect Queue
+                    </h2>
+                    <p class="text-xs text-gray-600 mb-4">Paste multiple names found from your X-Ray search here.</p>
+                    
+                    <textarea id="bulkNames" rows="3" class="w-full border-2 border-gray-200 rounded-lg p-3 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition mb-4" placeholder="Paste names (one per line)...&#10;Michelle Smith&#10;David Jenkins" oninput="processBulkNames()"></textarea>
+                    
+                    <div id="parsedNamesList" class="space-y-2 max-h-[250px] overflow-y-auto pr-2">
+                        <div class="text-center py-6 text-gray-400 border-2 border-dashed border-gray-200 rounded-lg">
+                            <i class="fas fa-clipboard-list text-3xl mb-2 opacity-50"></i>
+                            <p class="text-sm">Queue is empty</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="md:col-span-7 space-y-6">
+                
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 border-l-4 border-l-navy flex items-center justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-navy mb-1"><i class="fas fa-search mr-2"></i>1-Click Google X-Ray Search</h2>
+                        <p class="text-sm text-gray-600">Find UK professionals across all selected roles.</p>
+                    </div>
+                    <a id="xrayBtn" href="#" target="_blank" class="bg-navy text-white font-bold py-3 px-6 rounded-lg btn-transition opacity-50 cursor-not-allowed pointer-events-none hover:bg-navy-light shadow-md whitespace-nowrap ml-4">
+                        <i class="fas fa-rocket mr-2"></i>Run X-Ray
+                    </a>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 border-l-4 border-l-gold">
+                    <div class="flex justify-between items-center mb-4 border-b pb-3">
+                        <div>
+                            <h2 class="text-lg font-bold text-navy"><i class="fas fa-envelope mr-2 text-gold"></i>Generate & Verify Emails</h2>
+                            <p class="text-sm text-gray-600">Verification opens external tool automatically.</p>
+                        </div>
+                        <button onclick="copyAllEmails()" class="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg text-sm btn-transition shadow-sm flex items-center">
+                            <i class="fas fa-copy mr-2"></i>Copy All
+                        </button>
+                    </div>
+                    <div id="emailList" class="space-y-3 max-h-[350px] overflow-y-auto pr-2">
+                        <div class="text-center py-8 text-gray-400">
+                            <i class="fas fa-user-plus text-5xl mb-3 opacity-30"></i>
+                            <p class="text-lg">Select a prospect from your Queue</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 border-l-4 border-l-accent">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-navy"><i class="fas fa-pen mr-2 text-accent"></i>1-Click Pitch Generator</h2>
+                            <p class="text-sm text-gray-600">Instantly generate B2B email for this prospect</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button onclick="spinSubject()" class="border-2 border-gold text-gold hover:bg-gold hover:text-navy rounded-lg p-2 text-sm font-bold transition flex items-center" title="Swap Subject Line">
+                                <i class="fas fa-sync-alt mr-1"></i>Spin Subject
+                            </button>
+                            <select id="pitchType" onchange="generatePitch()" class="border-2 border-gray-200 rounded-lg p-2 text-sm font-semibold focus:border-accent focus:outline-none">
+                                <option value="direct">Direct Gatekeeper Pitch</option>
+                                <option value="trojan">info@ Routing Pitch</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="relative">
+                        <textarea id="pitchOutput" rows="14" class="w-full border-2 border-gray-200 rounded-lg p-4 text-sm font-sans text-gray-800 focus:border-accent focus:outline-none resize-y bg-gray-50 leading-relaxed" readonly placeholder="Select a prospect to generate pitch..."></textarea>
+                    </div>
+                    
+                    <div class="mt-4 flex gap-4">
+                        <button onclick="copyPitch()" id="copyPitchBtn" disabled class="flex-1 bg-accent hover:bg-purple-600 text-white font-bold py-3 rounded-lg btn-transition opacity-50 cursor-not-allowed shadow-md">
+                            <i class="fas fa-copy mr-2"></i>Copy Customized Pitch
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Data Arrays
+        const jobTitles = [
+            { title: "Office Manager", selected: true },
+            { title: "Facilities Manager", selected: true },
+            { title: "Executive Assistant", selected: true },
+            { title: "Travel Coordinator", selected: true },
+            { title: "Administrative Assistant", selected: false },
+            { title: "Operations Manager", selected: false },
+            { title: "PA to CEO", selected: false }
+        ];
+
+        const decisionMakers = [
+            { title: "Director", selected: false },
+            { title: "CEO", selected: false },
+            { title: "President", selected: false },
+            { title: "Vice President", selected: false },
+            { title: "Managing Director", selected: false },
+            { title: "Head of Operations", selected: false },
+            { title: "Chief of Staff", selected: false },
+            { title: "General Manager", selected: false }
+        ];
+
+        // Global State
+        let currentSubjectIndex = 0;
+        let activeTarget = { first: "", last: "", full: "" };
+
+        window.onload = function() {
+            renderJobTitles();
+            renderDecisionMakers();
+            updateDashboard();
+        };
+
+        function showToast(message, isSuccess = true) {
+            const toast = document.createElement('div');
+            toast.className = 'toast flex items-center';
+            toast.style.background = isSuccess ? '#10b981' : '#0A192F';
+            toast.innerHTML = `<i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-info-circle'} mr-2"></i>${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        function clearAll() {
+            document.getElementById('companyInput').value = 'NCR Corporation';
+            document.getElementById('domainInput').value = 'ncr.com';
+            document.getElementById('bulkNames').value = '';
+            activeTarget = { first: "", last: "", full: "" };
+            currentSubjectIndex = 0;
+            processBulkNames(); // clear queue visually
+            updateDashboard();
+            showToast('?? Board Cleared');
+        }
+
+        function renderJobTitles() {
+            const container = document.getElementById('jobTitlesList');
+            container.innerHTML = jobTitles.map((job, index) => `
+                <div class="flex items-center bg-gray-50 p-2 rounded hover:bg-gray-100 transition">
+                    <input type="checkbox" id="job_${index}" value="${job.title}" ${job.selected ? 'checked' : ''} onchange="updateXRayQuery()" class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold">
+                    <label for="job_${index}" class="ml-2 text-sm text-gray-700 cursor-pointer w-full"><i class="fas fa-shield-alt text-gray-400 mr-2 text-xs"></i>${job.title}</label>
+                </div>
+            `).join('');
+        }
+
+        function renderDecisionMakers() {
+            const container = document.getElementById('decisionMakerList');
+            container.innerHTML = decisionMakers.map((job, index) => `
+                <div class="flex items-center bg-gray-50 p-2 rounded hover:bg-gray-100 transition">
+                    <input type="checkbox" id="dm_${index}" value="${job.title}" ${job.selected ? 'checked' : ''} onchange="updateXRayQuery()" class="w-4 h-4 text-gold border-gray-300 rounded focus:ring-gold">
+                    <label for="dm_${index}" class="ml-2 text-sm text-gray-700 cursor-pointer w-full"><i class="fas fa-crown text-gray-400 mr-2 text-xs"></i>${job.title}</label>
+                </div>
+            `).join('');
+        }
+
+        function getAllSelectedTitles() {
+            const gatekeeperSelected = Array.from(document.querySelectorAll('#jobTitlesList input[type="checkbox"]:checked')).map(cb => cb.value);
+            const decisionMakerSelected = Array.from(document.querySelectorAll('#decisionMakerList input[type="checkbox"]:checked')).map(cb => cb.value);
+            return [...gatekeeperSelected, ...decisionMakerSelected];
+        }
+
+        function updateXRayQuery() {
+            const company = document.getElementById('companyInput').value.trim();
+            const selectedTitles = getAllSelectedTitles();
+            const xrayBtn = document.getElementById('xrayBtn');
+
+            if (company && selectedTitles.length > 0) {
+                const titlesQuery = selectedTitles.map(t => `"${t}"`).join(' OR ');
+                const query = `site:linkedin.com/in/ (${titlesQuery}) "${company}" "United Kingdom"`;
+                xrayBtn.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                xrayBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+                xrayBtn.innerHTML = '<i class="fas fa-rocket mr-2"></i>Run X-Ray';
+            } else {
+                xrayBtn.href = "#";
+                xrayBtn.classList.add('opacity-50', 'cursor-not-allowed', 'pointer-events-none');
+            }
+        }
+
+        // NEW: Bulk Name Processing
+        function processBulkNames() {
+            const text = document.getElementById('bulkNames').value;
+            // Split by line, remove empty lines
+            const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            const container = document.getElementById('parsedNamesList');
+            
+            if (lines.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-6 text-gray-400 border-2 border-dashed border-gray-200 rounded-lg">
+                        <i class="fas fa-clipboard-list text-3xl mb-2 opacity-50"></i>
+                        <p class="text-sm">Queue is empty</p>
+                    </div>`;
+                // If queue is cleared, clear active target
+                if (activeTarget.full !== "") {
+                    activeTarget = { first: "", last: "", full: "" };
+                    updateDashboard();
+                }
+                return;
+            }
+
+            container.innerHTML = lines.map((name, index) => {
+                // Escape quotes for the onclick handler
+                const safeName = name.replace(/'/g, "\\'");
+                const isSelected = activeTarget.full === name;
+                
+                return `
+                    <div onclick="selectProspect('${safeName}')" class="p-3 rounded-lg border cursor-pointer transition flex justify-between items-center ${isSelected ? 'bg-blue-600 text-white border-blue-600 shadow-md' : 'bg-gray-50 border-gray-200 hover:border-blue-300 text-navy'}">
+                        <span class="font-bold text-sm">${name}</span>
+                        ${isSelected ? '<i class="fas fa-check-circle text-white"></i>' : '<i class="fas fa-chevron-right text-gray-400 text-xs"></i>'}
+                    </div>
+                `;
+            }).join('');
+            
+            // Auto-select first if none is currently selected
+            if (activeTarget.full === "" && lines.length > 0) {
+                selectProspect(lines[0]);
+            }
+        }
+
+        function selectProspect(fullName) {
+            activeTarget.full = fullName;
+            const parts = fullName.split(' ').filter(p => p.trim() !== '');
+            activeTarget.first = parts[0] || '';
+            activeTarget.last = parts.slice(1).join(' ') || '';
+            
+            processBulkNames(); // Re-render queue to show active highlighting
+            updateDashboard();
+            showToast(`Target locked: ${fullName}`);
+        }
+
+        // RE-WIRED: External Verify Function
+        function verifyExternal(email, button) {
+            // 1. Copy the email to clipboard
+            navigator.clipboard.writeText(email).then(() => {
+                // 2. Visual feedback on button
+                button.classList.add('copy-success');
+                button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied & Opening...';
+                
+                showToast(`? Copied ${email}. Opening Verifier...`);
+                
+                // 3. Open verifier in new tab
+                window.open('https://www.verifyemailaddress.org/', '_blank');
+                
+                // Reset button
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-external-link-alt mr-1"></i>Verify';
+                    button.classList.remove('copy-success');
+                }, 2000);
+            });
+        }
+
+        function copyEmail(email, button) {
+            navigator.clipboard.writeText(email).then(() => {
+                button.classList.add('copy-success');
+                button.innerHTML = '<i class="fas fa-check mr-1"></i>Copied!';
+                showToast(`? Copied: ${email}`);
+                setTimeout(() => {
+                    button.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy';
+                    button.classList.remove('copy-success');
+                }, 1500);
+            });
+        }
+
+        function copyAllEmails() {
+            const emailElements = document.querySelectorAll('.email-row .font-mono');
+            const emails = Array.from(emailElements).map(el => el.textContent);
+            
+            if (emails.length > 0) {
+                navigator.clipboard.writeText(emails.join('\n')).then(() => {
+                    showToast(`? Copied all ${emails.length} emails to clipboard!`);
+                });
+            } else {
+                showToast(`?? No emails generated yet`, false);
+            }
+        }
+
+        function spinSubject() {
+            currentSubjectIndex++;
+            generatePitch();
+            showToast('?? Subject Rotated', true);
+        }
+
+        function generatePitch() {
+            const companyRaw = document.getElementById('companyInput').value.trim();
+            const company = companyRaw || "[Company Name]";
+            const first = activeTarget.first || "[First Name]";
+            const pitchType = document.getElementById('pitchType').value;
+            const pitchArea = document.getElementById('pitchOutput');
+            const copyBtn = document.getElementById('copyPitchBtn');
+            const capFirst = first !== "[First Name]" ? first.charAt(0).toUpperCase() + first.slice(1) : first;
+            
+            const directSubjects = [
+                `Heathrow transfers for the ${company} team`,
+                `${company} corporate transport / Jewels Transfers`,
+                `Dedicated transport account for ${company}`,
+                `Corporate rates: ${company} x Jewels Transfers`,
+                `Executive travel logistics for ${company}`
+            ];
+
+            const trojanSubjects = [
+                `Route to ${company} Office Manager / Facilities`,
+                `Supplier info for the ${company} Office Manager`,
+                `Vendor setup: Ground transport logistics`,
+                `Query for the ${company} travel coordinator`
+            ];
+
+            const selectedDirectSubject = directSubjects[currentSubjectIndex % directSubjects.length];
+            const selectedTrojanSubject = trojanSubjects[currentSubjectIndex % trojanSubjects.length];
+
+            let pitchText = "";
+            if (pitchType === "direct") {
+                pitchText = `Subject: ${selectedDirectSubject}\n\nDear ${capFirst},\n\nI hope you're doing well.\n\nI'm Luisa from Jewels Airport Transfers. I noticed your team is based at ${company}, and having worked with a number of corporate companies, I know how heavily teams rely on Heathrow for business travel.\n\nThat's exactly why I wanted to reach out. We help corporate teams take the guesswork out of airport transport — pre-booked, prepaid, reliable, and consistent, so there are no last-minute scrambles or delays when it matters most, particularly during peak travel periods.\n\nHere's what we offer:\n\n• A flexible range of vehicles — from standard saloons through to executive and group travel options\n• Professional, DBS-checked drivers\n• Consistent availability with straightforward, flexible invoicing\n\nIf you'd like to give us a try, use code TRIALRIDE10 for £10 off your first booking — a simple way to see how we work with no commitment.\n\nWould this be a good fit for the ${company} team's travel needs? If you're not the right person to speak with, I'd really appreciate a nudge in the right direction.\n\nThank you for your time, ${capFirst} — I hope to hear from you soon.\n\nKind regards,\nLuisa Cioni\nStrategic Growth Manager\nJewels Airport Transfers\n+44 (0)20 3322 7723\nluisa@jewels-airport-transfers.co.uk`;
+            } else {
+                pitchText = `Subject: ${selectedTrojanSubject}\n\nGood morning,\n\nCould you please forward this to your Office Manager or the person who handles corporate travel and ground transport logistics for the ${company} UK team?\n\nWe are a local, pre-booked executive transport fleet (Jewels Airport Transfers) looking to send over our corporate rate card. We want to ensure we are routing this to the correct desk before sending any attachments.\n\nThank you for your help.\n\nKind regards,\nLuisa Cioni\nStrategic Growth Manager\nJewels Airport Transfers\n+44 (0)20 3322 7723\nluisa@jewels-airport-transfers.co.uk`;
+            }
+
+            pitchArea.value = pitchText;
+
+            if (company !== "[Company Name]" && activeTarget.first !== "") {
+                copyBtn.disabled = false;
+                copyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            } else {
+                copyBtn.disabled = true;
+                copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            }
+        }
+
+        function copyPitch() {
+            navigator.clipboard.writeText(document.getElementById('pitchOutput').value).then(() => {
+                showToast('? Pitch copied to clipboard!');
+            });
+        }
+
+        function updateDashboard() {
+            const company = document.getElementById('companyInput').value.trim();
+            const domain = document.getElementById('domainInput').value.trim().toLowerCase().replace('@', '');
+            const first = activeTarget.first.toLowerCase();
+            const last = activeTarget.last.toLowerCase();
+            const fInitial = first.charAt(0);
+
+            document.getElementById('statCompany').textContent = company || 'Not set';
+            document.getElementById('statDomain').textContent = domain || 'Not set';
+            document.getElementById('statName').textContent = activeTarget.full || 'No active target';
+            
+            updateXRayQuery();
+            generatePitch();
+
+            const emailList = document.getElementById('emailList');
+            if (first && last && domain) {
+                const permutations = [
+                    { format: "Standard", email: `${first}.${last}@${domain}`, confidence: "High" },
+                    { format: "Initial + Last", email: `${fInitial}${last}@${domain}`, confidence: "High" },
+                    { format: "First + Last", email: `${first}${last}@${domain}`, confidence: "Medium" },
+                    { format: "First Only", email: `${first}@${domain}`, confidence: "Medium" },
+                    { format: "First_Last", email: `${first}_${last}@${domain}`, confidence: "Medium" }
+                ];
+
+                document.getElementById('statCount').textContent = permutations.length;
+
+                emailList.innerHTML = permutations.map(item => `
+                    <div class="email-row flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200 hover:border-gold transition mb-2">
+                        <div class="flex flex-col">
+                            <span class="font-mono text-navy font-bold text-sm mb-1">${item.email}</span>
+                            <span class="text-[10px] text-gray-500 uppercase font-bold tracking-wider"><i class="fas fa-tag mr-1"></i>${item.format} Format</span>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="verifyExternal('${item.email}', this)" class="bg-gold hover:bg-gold-light text-navy font-bold py-1.5 px-3 rounded text-xs btn-transition border border-gold">
+                                <i class="fas fa-external-link-alt mr-1"></i>Verify
+                            </button>
+                            <button onclick="copyEmail('${item.email}', this)" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-1.5 px-3 rounded text-xs btn-transition border border-gray-300">
+                                <i class="fas fa-copy mr-1"></i>Copy
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                emailList.innerHTML = `
+                    <div class="text-center py-10 text-gray-400">
+                        <i class="fas fa-user-plus text-5xl mb-4 opacity-30"></i>
+                        <p class="text-sm">Select a prospect from your Queue</p>
+                    </div>`;
+                document.getElementById('statCount').textContent = '0';
+            }
+        }
+    </script>
+</body>
+</html>
