@@ -405,7 +405,7 @@
             showToast('🔄 Subject Rotated', true);
         }
 
-        function generatePitch() {
+function generatePitch() {
     const companyRaw = document.getElementById('companyInput').value.trim();
     const company = companyRaw || "[Company Name]";
     const first = activeTarget.first || "[First Name]";
@@ -414,29 +414,348 @@
     const copyBtn = document.getElementById('copyPitchBtn');
     const capFirst = first !== "[First Name]" ? first.charAt(0).toUpperCase() + first.slice(1) : first;
     
-    const directSubjects = [
-        `Heathrow transfers for the ${company} team`,
-        `${company} corporate transport / Jewels Transfers`,
-        `Dedicated transport account for ${company}`,
-        `Corporate rates: ${company} x Jewels Transfers`,
-        `Executive travel logistics for ${company}`
+    // Get selected roles to customize email based on prospect's position
+    const selectedRoles = getAllSelectedTitles();
+    const prospectRole = selectedRoles.length > 0 ? selectedRoles[0] : "";
+    
+    // 5 different email variations with unique subjects and content
+    const emailVariations = [
+        {
+            subject: `Corporate travel solutions for ${company} | Jewels Airport Transfers`,
+            content: (role) => `Dear ${capFirst},
+
+I hope this message finds you well.
+
+I'm reaching out on behalf of Jewels Airport Transfers, and I wanted to explore how we could assist your team with reliable, stress-free travel solutions. We specialize in providing smooth and efficient airport and seaport transfers for corporate teams across the UK.
+
+Here's a brief overview of our service:
+
+• Nationwide coverage, ensuring seamless travel for your team
+• Executive and standard vehicle options to suit different needs
+• Professional, fully licensed drivers for a safe and comfortable experience
+• Transparent, fixed pricing for easy budgeting
+
+We also offer a discount on your first booking with the code TRIALRIDE10, giving £10 off.
+
+If this is something that could benefit your team, I'd be happy to connect or point you in the right direction to the relevant team member.
+
+Thank you for your time, and I look forward to hearing from you.
+
+Best regards,
+Jewels Airport Transfers
++44 (0)20 3322 7723
+hello@jewels-airport-transfers.co.uk`
+        },
+        {
+            subject: `Streamlining ${company}'s business travel logistics`,
+            content: (role) => `Dear ${capFirst},
+
+I trust you're having a productive week.
+
+I'm reaching out on behalf of Jewels Airport Transfers. We've been working with UK-based corporate clients to streamline their travel arrangements, particularly around Heathrow and other major transport hubs.
+
+Our clients often share that managing team travel can be time-consuming. We help by offering:
+
+• Pre-booking systems that integrate with corporate schedules
+• Consolidated billing options for finance teams
+• 24/7 support for last-minute travel changes
+• A fleet ranging from executive sedans to group transport
+
+Many of our corporate partners appreciate having a dedicated transport partner they can rely on, especially during peak travel seasons or when coordinating multiple team members.
+
+I'd be happy to share more details if travel coordination falls within your responsibilities. If not, I'd appreciate being pointed toward the appropriate person.
+
+Thank you for considering this.
+
+Kind regards,
+Jewels Airport Transfers
++44 (0)20 3322 7723
+hello@jewels-airport-transfers.co.uk`
+        },
+        {
+            subject: `Partnering with ${company} for executive transport needs`,
+            content: (role) => `Dear ${capFirst},
+
+I hope you're well.
+
+I'm reaching out on behalf of Jewels Airport Transfers. We provide executive transport solutions for businesses across the UK, and I'm reaching out to explore potential synergy with ${company}.
+
+Our service is designed with corporate clients in mind:
+
+• Executive vehicles with professional chauffeurs
+• Meet-and-greet services at airports and seaports
+• Flexible booking with no long-term commitments
+• Real-time tracking and updates for peace of mind
+
+We've found that organizations appreciate having a reliable transport partner they can call on for board meetings, client visits, and team travel.
+
+If your role involves managing corporate services or vendor partnerships, I'd be delighted to arrange a brief call to share more about how we work.
+
+Alternatively, if there's someone else who handles travel or facilities management, I'd greatly appreciate an introduction.
+
+Thank you for your time and consideration.
+
+Warm regards,
+Jewels Airport Transfers
++44 (0)20 3322 7723
+hello@jewels-airport-transfers.co.uk`
+        },
+        {
+            subject: `Enhancing ${company}'s travel experience with pre-booked transfers`,
+            content: (role) => `Dear ${capFirst},
+
+I hope this email finds you well.
+
+I'm reaching out on behalf of Jewels Airport Transfers to share how we support UK businesses with their travel requirements. Our focus is on making business travel straightforward and reliable.
+
+What sets us apart:
+
+• DBS-checked, experienced drivers
+• Door-to-door service with flight monitoring
+• Simple online booking system
+• Corporate accounts with flexible payment terms
+
+We understand that when teams are traveling for business, the details matter. Punctuality, comfort, and ease of booking can make a significant difference to the overall experience.
+
+I'd be happy to arrange a brief conversation to see if there's a fit for ${company}'s needs, or to connect with the right person on your team.
+
+Thank you for your time.
+
+Best regards,
+Jewels Airport Transfers
++44 (0)20 3322 7723
+hello@jewels-airport-transfers.co.uk`
+        },
+        {
+            subject: `${company} | Corporate travel partner inquiry`,
+            content: (role) => `Dear ${capFirst},
+
+I hope you're having a good week.
+
+I'm reaching out on behalf of Jewels Airport Transfers. We're a UK-based executive transport provider focused on serving corporate clients like ${company}.
+
+Our approach is simple:
+
+• We provide consistent, high-quality transport
+• We work around your team's schedule
+• We offer straightforward pricing with no surprises
+• We handle everything from individual trips to group transfers
+
+I'm reaching out to understand if travel logistics is something your team manages internally. Many of our clients appreciate having a dedicated transport partner who understands the demands of corporate travel.
+
+If this aligns with your role or if you could direct me to the appropriate person, I'd be grateful.
+
+Thank you for your time and consideration.
+
+Kind regards,
+Jewels Airport Transfers
++44 (0)20 3322 7723
+hello@jewels-airport-transfers.co.uk`
+        }
     ];
-
-    const trojanSubjects = [
-        `Route to ${company} Office Manager / Facilities`,
-        `Supplier info for the ${company} Office Manager`,
-        `Vendor setup: Ground transport logistics`,
-        `Query for the ${company} travel coordinator`
-    ];
-
-    const selectedDirectSubject = directSubjects[currentSubjectIndex % directSubjects.length];
-    const selectedTrojanSubject = trojanSubjects[currentSubjectIndex % trojanSubjects.length];
-
+    
+    // Rotate through variations based on subject spin index
+    const variationIndex = currentSubjectIndex % emailVariations.length;
+    const selectedVariation = emailVariations[variationIndex];
+    
+    // Subjects for the dropdown/spin button
+    const subjects = emailVariations.map(v => v.subject);
+    
     let pitchText = "";
     if (pitchType === "direct") {
-        pitchText = `Subject: ${selectedDirectSubject}\n\nDear ${capFirst},\n\nI hope you're doing well.\n\nI'm Luisa from Jewels Airport Transfers. I noticed your team is based at ${company}, and having worked with a number of corporate companies, I know how heavily teams rely on Heathrow for business travel.\n\nThat's exactly why I wanted to reach out. We help corporate teams take the guesswork out of airport transport — pre-booked, prepaid, reliable, and consistent, so there are no last-minute scrambles or delays when it matters most, particularly during peak travel periods.\n\nHere's what we offer:\n\n• A flexible range of vehicles — from standard saloons through to executive and group travel options\n• Professional, DBS-checked drivers\n• Consistent availability with straightforward, flexible invoicing\n\nIf you'd like to give us a try, use code TRIALRIDE10 for £10 off your first booking — a simple way to see how we work with no commitment.\n\nWould this be a good fit for the ${company} team's travel needs? If you're not the right person to speak with, I'd really appreciate a nudge in the right direction.\n\nThank you for your time, ${capFirst} — I hope to hear from you soon.\n\nKind regards,\nLuisa Cioni\nStrategic Growth Manager\nJewels Airport Transfers\n+44 (0)20 3322 7723\nluisa@jewels-airport-transfers.co.uk`;
+        pitchText = `Subject: ${selectedVariation.subject}\n\n${selectedVariation.content(prospectRole)}`;
     } else {
-        pitchText = `Subject: ${selectedTrojanSubject}\n\nGood morning,\n\nCould you please forward this to your Office Manager or the person who handles corporate travel and ground transport logistics for the ${company} UK team?\n\nWe are a local, pre-booked executive transport fleet (Jewels Airport Transfers) looking to send over our corporate rate card. We want to ensure we are routing this to the correct desk before sending any attachments.\n\nThank you for your help.\n\nKind regards,\nLuisa Cioni\nStrategic Growth Manager\nJewels Airport Transfers\n+44 (0)20 3322 7723\nluisa@jewels-airport-transfers.co.uk`;
+        const trojanSubjects = [
+            `For the attention of ${company}'s Office Manager / Facilities Team`,
+            `Supplier registration inquiry for ${company}`,
+            `Vendor introduction: Ground transport services`,
+            `For the ${company} travel coordination team`,
+            `Corporate transport services - ${company}`
+        ];
+        const selectedTrojanSubject = trojanSubjects[currentSubjectIndex % trojanSubjects.length];
+        
+        pitchText = `Subject: ${selectedTrojanSubject}\n\nGood morning,\n\nCould you please forward this to your Office Manager, Facilities Manager, or the person who handles corporate travel and ground transport logistics for the ${company} UK team?\n\nI'm reaching out on behalf of Jewels Airport Transfers, a local, pre-booked executive transport fleet, and would like to introduce our corporate services. I wanted to ensure we're routing this to the correct desk before sending over further details.\n\nThank you for your help.\n\nKind regards,\nJewels Airport Transfers\n+44 (0)20 3322 7723\nhello@jewels-airport-transfers.co.uk`;
+    }
+
+    pitchArea.value = pitchText;
+
+    if (company !== "[Company Name]" && activeTarget.first !== "") {
+        copyBtn.disabled = false;
+        copyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+    } else {
+        copyBtn.disabled = true;
+        copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+    }
+}function generatePitch() {
+    const companyRaw = document.getElementById('companyInput').value.trim();
+    const company = companyRaw || "[Company Name]";
+    const first = activeTarget.first || "[First Name]";
+    const pitchType = document.getElementById('pitchType').value;
+    const pitchArea = document.getElementById('pitchOutput');
+    const copyBtn = document.getElementById('copyPitchBtn');
+    const capFirst = first !== "[First Name]" ? first.charAt(0).toUpperCase() + first.slice(1) : first;
+    
+    // Get selected roles to customize email based on prospect's position
+    const selectedRoles = getAllSelectedTitles();
+    const prospectRole = selectedRoles.length > 0 ? selectedRoles[0] : "";
+    
+    // 5 different email variations with unique subjects and content
+    const emailVariations = [
+        {
+            subject: `Corporate travel solutions for ${company} | Jewels Airport Transfers`,
+            content: (role) => `Dear ${capFirst},
+
+I hope this message finds you well.
+
+I'm reaching out on behalf of Jewels Airport Transfers, and I wanted to explore how we could assist your team with reliable, stress-free travel solutions. We specialize in providing smooth and efficient airport and seaport transfers for corporate teams across the UK.
+
+Here's a brief overview of our service:
+
+• Nationwide coverage, ensuring seamless travel for your team
+• Executive and standard vehicle options to suit different needs
+• Professional, fully licensed drivers for a safe and comfortable experience
+• Transparent, fixed pricing for easy budgeting
+
+We also offer a discount on your first booking with the code TRIALRIDE10, giving £10 off.
+
+If this is something that could benefit your team, I'd be happy to connect or point you in the right direction to the relevant team member.
+
+Thank you for your time, and I look forward to hearing from you.
+
+Best regards,
+Jewels Airport Transfers
++44 (0)20 3322 7723
+hello@jewels-airport-transfers.co.uk`
+        },
+        {
+            subject: `Streamlining ${company}'s business travel logistics`,
+            content: (role) => `Dear ${capFirst},
+
+I trust you're having a productive week.
+
+I'm reaching out on behalf of Jewels Airport Transfers. We've been working with UK-based corporate clients to streamline their travel arrangements, particularly around Heathrow and other major transport hubs.
+
+Our clients often share that managing team travel can be time-consuming. We help by offering:
+
+• Pre-booking systems that integrate with corporate schedules
+• Consolidated billing options for finance teams
+• 24/7 support for last-minute travel changes
+• A fleet ranging from executive sedans to group transport
+
+Many of our corporate partners appreciate having a dedicated transport partner they can rely on, especially during peak travel seasons or when coordinating multiple team members.
+
+I'd be happy to share more details if travel coordination falls within your responsibilities. If not, I'd appreciate being pointed toward the appropriate person.
+
+Thank you for considering this.
+
+Kind regards,
+Jewels Airport Transfers
++44 (0)20 3322 7723
+hello@jewels-airport-transfers.co.uk`
+        },
+        {
+            subject: `Partnering with ${company} for executive transport needs`,
+            content: (role) => `Dear ${capFirst},
+
+I hope you're well.
+
+I'm reaching out on behalf of Jewels Airport Transfers. We provide executive transport solutions for businesses across the UK, and I'm reaching out to explore potential synergy with ${company}.
+
+Our service is designed with corporate clients in mind:
+
+• Executive vehicles with professional chauffeurs
+• Meet-and-greet services at airports and seaports
+• Flexible booking with no long-term commitments
+• Real-time tracking and updates for peace of mind
+
+We've found that organizations appreciate having a reliable transport partner they can call on for board meetings, client visits, and team travel.
+
+If your role involves managing corporate services or vendor partnerships, I'd be delighted to arrange a brief call to share more about how we work.
+
+Alternatively, if there's someone else who handles travel or facilities management, I'd greatly appreciate an introduction.
+
+Thank you for your time and consideration.
+
+Warm regards,
+Jewels Airport Transfers
++44 (0)20 3322 7723
+hello@jewels-airport-transfers.co.uk`
+        },
+        {
+            subject: `Enhancing ${company}'s travel experience with pre-booked transfers`,
+            content: (role) => `Dear ${capFirst},
+
+I hope this email finds you well.
+
+I'm reaching out on behalf of Jewels Airport Transfers to share how we support UK businesses with their travel requirements. Our focus is on making business travel straightforward and reliable.
+
+What sets us apart:
+
+• DBS-checked, experienced drivers
+• Door-to-door service with flight monitoring
+• Simple online booking system
+• Corporate accounts with flexible payment terms
+
+We understand that when teams are traveling for business, the details matter. Punctuality, comfort, and ease of booking can make a significant difference to the overall experience.
+
+I'd be happy to arrange a brief conversation to see if there's a fit for ${company}'s needs, or to connect with the right person on your team.
+
+Thank you for your time.
+
+Best regards,
+Jewels Airport Transfers
++44 (0)20 3322 7723
+hello@jewels-airport-transfers.co.uk`
+        },
+        {
+            subject: `${company} | Corporate travel partner inquiry`,
+            content: (role) => `Dear ${capFirst},
+
+I hope you're having a good week.
+
+I'm reaching out on behalf of Jewels Airport Transfers. We're a UK-based executive transport provider focused on serving corporate clients like ${company}.
+
+Our approach is simple:
+
+• We provide consistent, high-quality transport
+• We work around your team's schedule
+• We offer straightforward pricing with no surprises
+• We handle everything from individual trips to group transfers
+
+I'm reaching out to understand if travel logistics is something your team manages internally. Many of our clients appreciate having a dedicated transport partner who understands the demands of corporate travel.
+
+If this aligns with your role or if you could direct me to the appropriate person, I'd be grateful.
+
+Thank you for your time and consideration.
+
+Kind regards,
+Jewels Airport Transfers
++44 (0)20 3322 7723
+hello@jewels-airport-transfers.co.uk`
+        }
+    ];
+    
+    // Rotate through variations based on subject spin index
+    const variationIndex = currentSubjectIndex % emailVariations.length;
+    const selectedVariation = emailVariations[variationIndex];
+    
+    // Subjects for the dropdown/spin button
+    const subjects = emailVariations.map(v => v.subject);
+    
+    let pitchText = "";
+    if (pitchType === "direct") {
+        pitchText = `Subject: ${selectedVariation.subject}\n\n${selectedVariation.content(prospectRole)}`;
+    } else {
+        const trojanSubjects = [
+            `For the attention of ${company}'s Office Manager / Facilities Team`,
+            `Supplier registration inquiry for ${company}`,
+            `Vendor introduction: Ground transport services`,
+            `For the ${company} travel coordination team`,
+            `Corporate transport services - ${company}`
+        ];
+        const selectedTrojanSubject = trojanSubjects[currentSubjectIndex % trojanSubjects.length];
+        
+        pitchText = `Subject: ${selectedTrojanSubject}\n\nGood morning,\n\nCould you please forward this to your Office Manager, Facilities Manager, or the person who handles corporate travel and ground transport logistics for the ${company} UK team?\n\nI'm reaching out on behalf of Jewels Airport Transfers, a local, pre-booked executive transport fleet, and would like to introduce our corporate services. I wanted to ensure we're routing this to the correct desk before sending over further details.\n\nThank you for your help.\n\nKind regards,\nJewels Airport Transfers\n+44 (0)20 3322 7723\nhello@jewels-airport-transfers.co.uk`;
     }
 
     pitchArea.value = pitchText;
@@ -449,12 +768,6 @@
         copyBtn.classList.add('opacity-50', 'cursor-not-allowed');
     }
 }
-
-        function copyPitch() {
-            navigator.clipboard.writeText(document.getElementById('pitchOutput').value).then(() => {
-                showToast('✅ Pitch copied to clipboard!');
-            });
-        }
 
         function updateDashboard() {
             const company = document.getElementById('companyInput').value.trim();
